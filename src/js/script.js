@@ -11,13 +11,8 @@ $(function () {
         success: function (data) {
             dataImages = JSON.parse(data);
             var i = dataImages.length;
-            //console.log(dataImages);
-            for (var key in dataImages) {
-                //console.log(dataImages[key]);
-            }
             loadImages(dataImages);
-            clickOnImage();
-            //console.log(data.length);
+            bindClickOnImage();
         }
     });
 
@@ -33,7 +28,6 @@ $(function () {
             img.setAttribute('id', imgArr[key]);
             img.setAttribute('name', key);
             img.src = imgArr[key];
-            //console.log(img);
             imageContainer[0].appendChild(img);
         }
     }
@@ -75,7 +69,7 @@ $(function () {
 
         setTimeout(function () {
 
-            $('.modal-image').attr('src', images[currentImage]);
+            $('.modal-image').attr('src', dataImages[currentImage]);
             $('.modal-image').animate({
                 opacity: '1'
             }, "slow");
@@ -87,6 +81,7 @@ $(function () {
 
         if (currentImage !== 0) {
             currentImage--;
+            console.log(currentImage);
             animateTransition('.left-arrow', '.right-arrow');
             if (currentImage === 0) {
                 $('.right-arrow').css('visibility', 'visible');
@@ -96,8 +91,9 @@ $(function () {
     }
 
     function rightArrowFunction() {
-        if (currentImage !== images.length - 1) {
+        if (currentImage !== dataImages.length - 1) {
             currentImage++;
+            console.log(currentImage);
             animateTransition('.right-arrow', '.left-arrow');
             if (currentImage === 9) {
                 $('.right-arrow').css('visibility', 'hidden');
@@ -108,37 +104,41 @@ $(function () {
     $('.arrow-container').on('click', '.left-arrow', leftArrowFunction);
     $('.arrow-container').on('click', '.right-arrow', rightArrowFunction);
 
-    function clickOnImage() {
-        $('.img-holder').click(function () {
-            $('.modal').removeClass('modal-close-animator');
+    function clickedOnImage() {
+        $('.modal').removeClass('modal-close-animator');
 
-            var id = $(this).prop('name');
-            var slicedID = id.slice(6, 7);
-            currentImage = id;
+        var id = $(this).prop('name');
+        currentImage = id;
+        console.log(currentImage);
 
-            if (currentImage === '0') {
-                $('.right-arrow').css('visibility', 'visible');
-                $('.left-arrow').css('visibility', 'hidden');
-            } else if (currentImage === '9') {
-                $('.right-arrow').css('visibility', 'hidden');
-                $('.left-arrow').css('visibility', 'visible');
-            } else {
-                $('.right-arrow').css('visibility', 'visible');
-                $('.left-arrow').css('visibility', 'visible');
-            }
+        if (currentImage === '0') {
+            $('.right-arrow').css('visibility', 'visible');
+            $('.left-arrow').css('visibility', 'hidden');
+        } else if (currentImage === '9') {
+            $('.right-arrow').css('visibility', 'hidden');
+            $('.left-arrow').css('visibility', 'visible');
+        } else {
+            $('.right-arrow').css('visibility', 'visible');
+            $('.left-arrow').css('visibility', 'visible');
+        }
 
-            $('.modal-image').attr('src', '');
+        $('.modal-image').attr('src', '');
 
-            $('.modal').css('visibility', 'visible');
+        $('.modal').css('visibility', 'visible');
 
-            $('.modal').addClass('modal-animator');
+        $('.modal').addClass('modal-animator');
 
-            setTimeout(function () {
-                $('.modal-image').attr('src', images[id]);
-                $('.loader').css('visibility', 'hidden');
-            }, 3000);
+        setTimeout(function () {
+            $('.modal-image').attr('src', dataImages[id]);
+            $('.loader').css('visibility', 'hidden');
+        }, 3000);
 
-            $('.loader').css('visibility', 'visible');
-        }).bind(this);
+        $('.loader').css('visibility', 'visible');
+    }
+
+    function bindClickOnImage() {
+        for (i = 0; i < imageHolder.length; i++) {
+            imageHolder[i].addEventListener('click', clickedOnImage.bind(this), false);
+        }
     }
 });
