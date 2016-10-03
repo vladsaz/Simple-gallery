@@ -81,7 +81,6 @@ $(function () {
 
         if (currentImage !== 0) {
             currentImage--;
-            console.log(currentImage);
             animateTransition('.left-arrow', '.right-arrow');
             if (currentImage === 0) {
                 $('.right-arrow').css('visibility', 'visible');
@@ -93,7 +92,6 @@ $(function () {
     function rightArrowFunction() {
         if (currentImage !== dataImages.length - 1) {
             currentImage++;
-            console.log(currentImage);
             animateTransition('.right-arrow', '.left-arrow');
             if (currentImage === 9) {
                 $('.right-arrow').css('visibility', 'hidden');
@@ -104,12 +102,10 @@ $(function () {
     $('.arrow-container').on('click', '.left-arrow', leftArrowFunction);
     $('.arrow-container').on('click', '.right-arrow', rightArrowFunction);
 
-    function clickedOnImage() {
+    function clickedOnImage(event) {
         $('.modal').removeClass('modal-close-animator');
-
-        var id = $(this).prop('name');
+        var id = event.target.name;
         currentImage = id;
-        console.log(currentImage);
 
         if (currentImage === '0') {
             $('.right-arrow').css('visibility', 'visible');
